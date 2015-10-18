@@ -264,6 +264,8 @@ medianTotalSteps &lt;- median(totalSteps$steps, na.rm=TRUE)
 ## 104      835 206.1698
 </code></pre>
 
+<p>Interval <strong>835</strong> is the interval with the most steps at <strong>206.1698113</strong> steps.</p>
+
 <h3>Imputing missing values</h3>
 
 <h4>Note that there are a number of days/intervals where there are missing values (coded as NA). The presence of missing days may introduce bias into some calculations or summaries of the data.</h4>
@@ -279,7 +281,11 @@ medianTotalSteps &lt;- median(totalSteps$steps, na.rm=TRUE)
 <pre><code>## [1] 2304
 </code></pre>
 
+<p>There are <strong>2304</strong> intervals with missing values (NA).</p>
+
 <p>Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.</p>
+
+<p>For this project, the mean of each interval will be used to replace the missing values.</p>
 
 <pre><code class="r">meanTotalInterval &lt;- tapply(actDF$steps, actDF$interval, mean, na.rm=TRUE)
 </code></pre>
@@ -317,6 +323,10 @@ medianDiff &lt;- medianTotalStepsNoNA - medianTotalSteps
 
 <pre><code>## [1] 1.188679
 </code></pre>
+
+<p>The difference between the mean of the dataset with missing values and the dataset that was &ldquo;data fixed&rdquo; is <strong>0</strong>.</p>
+
+<p>The difference between the mean of the dataset with missing values and the dataset that was &ldquo;data fixed&rdquo; is <strong>1.1886792</strong>.</p>
 
 <h3>Are there differences in activity patterns between weekdays and weekends?</h3>
 

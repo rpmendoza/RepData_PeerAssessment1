@@ -78,6 +78,9 @@ maxInterval
 ## 104      835 206.1698
 ```
 
+Interval **835** is the interval with the most steps at **206.1698113** steps.
+
+
 ### Imputing missing values
 
 #### Note that there are a number of days/intervals where there are missing values (coded as NA). The presence of missing days may introduce bias into some calculations or summaries of the data.
@@ -96,7 +99,11 @@ totalNAs
 ## [1] 2304
 ```
 
+There are **2304** intervals with missing values (NA).
+
 Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+
+For this project, the mean of each interval will be used to replace the missing values.
 
 ```r
 meanTotalInterval <- tapply(actDF$steps, actDF$interval, mean, na.rm=TRUE)
@@ -141,6 +148,10 @@ medianDiff
 ```
 ## [1] 1.188679
 ```
+
+The difference between the mean of the dataset with missing values and the dataset that was "data fixed" is **0**.
+
+The difference between the mean of the dataset with missing values and the dataset that was "data fixed" is **1.1886792**.
 
 ### Are there differences in activity patterns between weekdays and weekends?
 
