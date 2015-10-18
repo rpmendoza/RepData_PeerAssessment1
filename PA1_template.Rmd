@@ -5,6 +5,11 @@ date: "October 18, 2015"
 output: html_document
 ---
 
+The purpose of this document is to analyze the data collected from a personal activity
+monitoring device such as Fitbit, Nike Fuelband, etc. The data came from an anonymous
+individual and it collected the number of steps taken in 5-minute intervals between the months of October and November 2012.
+
+
 ### Loading and preprocessing the data
 
 Load the data (i.e. read.csv())
@@ -18,7 +23,7 @@ Process/transform the data (if necessary) into a format suitable for your analys
 actDF$date <- as.Date(actDF$date, format="%Y-%m-%d")
 ```
 
-I also load the dplyr package which will be used later in the analysis
+The dplyr package is also loaded which will be used later in the analysis
 ```{r results='hide'}
 require(dplyr)
 ```
@@ -26,7 +31,7 @@ require(dplyr)
 
 ### What is mean total number of steps taken per day?
 
-#### For this part of the assignment, you can ignore the missing values in the dataset.
+#### For this part of the assignment, missing values in the dataset are ignored
 
 Calculate the total number of steps taken per day
 ```{r}
@@ -43,11 +48,8 @@ Calculate and report the mean and median of the total number of steps taken per 
 meanTotalSteps <- mean(totalSteps$steps, na.rm=TRUE)
 medianTotalSteps <- median(totalSteps$steps, na.rm=TRUE)
 ```
-```{r}
-meanTotalSteps
-medianTotalSteps
-```
 
+The mean of the total steps per day is **`r meanTotalSteps`** and the median of the total steps per day is **`r medianTotalSteps`**.
 
 ### What is the average daily activity pattern?
 

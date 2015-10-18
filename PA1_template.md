@@ -5,6 +5,11 @@ date: "October 18, 2015"
 output: html_document
 ---
 
+The purpose of this document is to analyze the data collected from a personal activity
+monitoring device such as Fitbit, Nike Fuelband, etc. The data came from an anonymous
+individual and it collected the number of steps taken in 5-minute intervals between the months of October and November 2012.
+
+
 ### Loading and preprocessing the data
 
 Load the data (i.e. read.csv())
@@ -20,7 +25,7 @@ Process/transform the data (if necessary) into a format suitable for your analys
 actDF$date <- as.Date(actDF$date, format="%Y-%m-%d")
 ```
 
-I also load the dplyr package which will be used later in the analysis
+The dplyr package is also loaded which will be used later in the analysis
 
 ```r
 require(dplyr)
@@ -29,7 +34,7 @@ require(dplyr)
 
 ### What is mean total number of steps taken per day?
 
-#### For this part of the assignment, you can ignore the missing values in the dataset.
+#### For this part of the assignment, missing values in the dataset are ignored
 
 Calculate the total number of steps taken per day
 
@@ -47,22 +52,7 @@ meanTotalSteps <- mean(totalSteps$steps, na.rm=TRUE)
 medianTotalSteps <- median(totalSteps$steps, na.rm=TRUE)
 ```
 
-```r
-meanTotalSteps
-```
-
-```
-## [1] 10766.19
-```
-
-```r
-medianTotalSteps
-```
-
-```
-## [1] 10765
-```
-
+The mean of the total steps per day is **1.0766189 &times; 10<sup>4</sup>** and the median of the total steps per day is **10765**.
 
 ### What is the average daily activity pattern?
 
@@ -71,7 +61,7 @@ Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and 
 ```r
 interval <- aggregate(actDF$steps, by=list(interval=actDF$interval), na.rm=TRUE, FUN=mean)
 ```
-![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8-1.png) 
 
 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
@@ -125,7 +115,7 @@ Make a histogram of the total number of steps taken each day and Calculate and r
 ```r
 totalStepsNoNA <- aggregate(cbind(steps) ~ date, data=noNADF, FUN=sum)
 ```
-![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17-1.png) 
+![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16-1.png) 
 
 Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
@@ -171,7 +161,7 @@ noNADFWeekday <- subset(noNADF, typeOfWeek == "weekday")
 intervalWeekend <- aggregate(noNADFWeekend$steps, by=list(interval=noNADFWeekend$interval), na.rm=TRUE, FUN=mean)
 intervalWeekday <- aggregate(noNADFWeekday$steps, by=list(interval=noNADFWeekday$interval), na.rm=TRUE, FUN=mean)
 ```
-![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-23-1.png) ![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-23-2.png) 
+![plot of chunk unnamed-chunk-22](figure/unnamed-chunk-22-1.png) ![plot of chunk unnamed-chunk-22](figure/unnamed-chunk-22-2.png) 
 
 
 
