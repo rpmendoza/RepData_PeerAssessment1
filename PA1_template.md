@@ -8,18 +8,21 @@ output: html_document
 ### Loading and preprocessing the data
 
 Load the data (i.e. read.csv())
-```{r}
+
+```r
 unzip("repdata-data-activity.zip")
 actDF <- read.csv(file="activity.csv", header=TRUE)
 ```
 
 Process/transform the data (if necessary) into a format suitable for your analysis
-```{r}
+
+```r
 actDF$date <- as.Date(actDF$date, format="%Y-%m-%d")
 ```
 
 I also load the dplyr package which will be used later in the analysis
-```{r results='hide'}
+
+```r
 require(dplyr)
 ```
 
@@ -29,42 +32,60 @@ require(dplyr)
 #### For this part of the assignment, you can ignore the missing values in the dataset.
 
 Calculate the total number of steps taken per day
-```{r}
+
+```r
 totalSteps <- aggregate(cbind(steps) ~ date, data=actDF, FUN=sum)
 ```
 
 Make a histogram of the total number of steps taken each day
-```{r echo=FALSE}
-hist(totalSteps$steps, breaks=25, col="steel blue", xlab="Total Steps per Day", main="Histogram of Steps per Day")
-```
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
 
 Calculate and report the mean and median of the total number of steps taken per day.
-```{r}
+
+```r
 meanTotalSteps <- mean(totalSteps$steps, na.rm=TRUE)
 medianTotalSteps <- median(totalSteps$steps, na.rm=TRUE)
 ```
-```{r}
+
+```r
 meanTotalSteps
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 medianTotalSteps
+```
+
+```
+## [1] 10765
 ```
 
 
 ### What is the average daily activity pattern?
 
 Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
-```{r}
+
+```r
 interval <- aggregate(actDF$steps, by=list(interval=actDF$interval), na.rm=TRUE, FUN=mean)
 ```
-```{r echo=FALSE}
-plot(y=interval$x, x=interval$interval, col="steel blue", type="l", main="Daily Activity Pattern", xlab="5-minute Intervals", ylab="Number of Steps")
-```
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 
 
 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
-```{r}
+
+```r
 maxInterval <- interval[which.max(interval$x),]
 ```
-```{r}
+
+```r
 maxInterval
+```
+
+```
+##     interval        x
+## 104      835 206.1698
 ```
 
 ### Imputing missing values
@@ -72,45 +93,63 @@ maxInterval
 #### Note that there are a number of days/intervals where there are missing values (coded as NA). The presence of missing days may introduce bias into some calculations or summaries of the data.
 
 Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
-```{r}
+
+```r
 totalNAs <- sum(is.na(actDF$steps))
 ```
-```{r}
+
+```r
 totalNAs
 ```
 
+```
+## [1] 2304
+```
+
 Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
-```{r}
+
+```r
 meanTotalInterval <- tapply(actDF$steps, actDF$interval, mean, na.rm=TRUE)
 ```
 
 Create a new dataset that is equal to the original dataset but with the missing data filled in.
-```{r}
+
+```r
 noNADF <- actDF
 allNAs <- is.na(noNADF$steps)
 noNADF$steps[allNAs] <- meanTotalInterval[as.character(noNADF$interval[allNAs])]
 ```
 
 Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day.
-```{r}
+
+```r
 totalStepsNoNA <- aggregate(cbind(steps) ~ date, data=noNADF, FUN=sum)
 ```
-```{r echo=FALSE}
-hist(totalStepsNoNA$steps, breaks=25, col="steel blue", xlab="Total Steps per Day", main="Histogram of Steps per Day with Data Fix")
-```
+![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17-1.png) 
 
 Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
-```{r}
+
+```r
 meanTotalStepsNoNA <- mean(totalStepsNoNA$steps, na.rm=TRUE)
 medianTotalStepsNoNA <- median(totalStepsNoNA$steps, na.rm=TRUE)
 meanDiff <- meanTotalStepsNoNA - meanTotalSteps
 medianDiff <- medianTotalStepsNoNA - medianTotalSteps
 ```
-```{r}
+
+```r
 meanDiff
 ```
-```{r}
+
+```
+## [1] 0
+```
+
+```r
 medianDiff
+```
+
+```
+## [1] 1.188679
 ```
 
 ### Are there differences in activity patterns between weekdays and weekends?
@@ -118,22 +157,21 @@ medianDiff
 #### For this part the weekdays() function may be of some help here. Use the dataset with the filled-in missing values for this part.
 
 Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
-```{r}
+
+```r
 noNADF <- mutate(noNADF, week=weekdays(date))
 noNADF <- noNADF %>% mutate(typeOfWeek = ifelse(week=="Saturday" | week=="Sunday","weekend", "weekday"))
 ```
 
 Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
-```{r}
+
+```r
 noNADFWeekend <- subset(noNADF, typeOfWeek == "weekend")
 noNADFWeekday <- subset(noNADF, typeOfWeek == "weekday")
 intervalWeekend <- aggregate(noNADFWeekend$steps, by=list(interval=noNADFWeekend$interval), na.rm=TRUE, FUN=mean)
 intervalWeekday <- aggregate(noNADFWeekday$steps, by=list(interval=noNADFWeekday$interval), na.rm=TRUE, FUN=mean)
 ```
-```{r echo=FALSE}
-plot(y=intervalWeekend$x, x=intervalWeekend$interval, col="steel blue", type="l", main="Weekend Activity Pattern", xlab="5-minute Intervals", ylab="Number of Steps")
-plot(y=intervalWeekday$x, x=intervalWeekday$interval, col="steel blue", type="l", main="Weekday Activity Pattern", xlab="5-minute Intervals", ylab="Number of Steps")
-```
+![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-23-1.png) ![plot of chunk unnamed-chunk-23](figure/unnamed-chunk-23-2.png) 
 
 
 
